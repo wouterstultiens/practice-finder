@@ -10,6 +10,7 @@ from telegram import Bot, constants
 
 _LOG = logging.getLogger(__name__)
 _bot  = Bot(token=os.environ["BOT_TOKEN"])
+_bot.run()
 _IDS  = [cid.strip() for cid in os.environ["CHAT_IDS"].split(",") if cid.strip()]
 
 
