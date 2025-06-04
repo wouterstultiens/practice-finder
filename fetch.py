@@ -8,7 +8,7 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0"
 }
 
-def fetch_content(url: str, selector: str, print_soup: bool = False) -> str:
+def fetch_content(url: str, selector: str, get_full_html: bool, print_soup: bool = False) -> str:
     """
     Download *url* and return the text content of the first element
     that matches *selector*. Returns an empty string if nothing matched.
@@ -21,4 +21,8 @@ def fetch_content(url: str, selector: str, print_soup: bool = False) -> str:
         print("\nSOUP:\n")
         print(soup.prettify())
     element = soup.select_one(selector)
-    return element.get_text(strip=True, separator=" ") if element else ""
+
+    if get_full_html:
+        return str(element) if element else ""
+    else:
+        return element.get_text(strip=True, separator=" ") if element else ""

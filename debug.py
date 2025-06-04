@@ -8,7 +8,7 @@ def main() -> None:
     args = parser.parse_args()
 
     practice = PRACTICES[int(args.id)]
-    content = fetch_content(practice["url"], practice["selector"], True)
+    content = fetch_content(practice["url"], practice["selector"], practice["get_full_html"], True)
     print(f"\nCONTENT:\n{content}")
 
 if __name__ == "__main__":
