@@ -7,6 +7,7 @@ from typing import Iterable
 from telegram import Bot, constants
 
 _LOG = logging.getLogger(__name__)
+_LOG.info("🚀 notifier.py v2 loading")   # <<— temporary version check
 _bot = Bot(token=os.environ["BOT_TOKEN"])
 _IDS = [cid.strip() for cid in os.environ["CHAT_IDS"].split(",") if cid.strip()]
 
