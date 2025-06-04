@@ -5,4 +5,4 @@ data/
 practice-finder.iml
 __pycache__/
 *.xml
-*.txt
+deploy.txt
