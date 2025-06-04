@@ -1,52 +1,60 @@
-# state.py
+# monitor.py
 """
-Persist full page‐content snapshots to GCS.
+Orchestrates one crawl / diff / notify cycle.
 
-- state.json holds the latest content for each URL (used for diffing).
-- snapshots/YYYYMMDD_HHMMSS.json archives the full content of each run.
+Logic:
+    • download every configured vacancy page (see config.PRACTICES)
+    • compare against the previous HTML snapshot stored in GCS
+    • persist the new state and archive a timestamped JSON snapshot
+    • return a list[str] with human-readable Telegram messages
 """
 
-import os, json, datetime
-from google.cloud import storage
+from __future__ import annotations
 
-_BUCKET_NAME = os.environ["STATE_BUCKET"]
-_storage = storage.Client()
-_bucket  = _storage.bucket(_BUCKET_NAME)
+import datetime, logging
+from typing import List
 
-_STATE_BLOB    = "state.json"
-_SNAPSHOTS_DIR = "snapshots/"
+from fetch import fetch_content
+from config import PRACTICES                    # single source of truth
+from state import load_state, save_state, archive_snapshot
 
-
-def _blob(name: str):
-    return _bucket.blob(name)
+_LOG = logging.getLogger(__name__)
 
 
-def load_state() -> dict[str, str]:
+def _now() -> str:  # ISO-8601 helper for logs
+    return datetime.datetime.utcnow().isoformat(timespec="seconds") + "Z"
+
+
+def run_once() -> List[str]:
     """
-    Load the current state.json, returns { url: content }.
-    If state.json does not exist yet, returns {}.
-    """
-    blob = _blob(_STATE_BLOB)
-    if blob.exists():
-        return json.loads(blob.download_as_text())
-    return {}
+    Runs a single monitoring cycle.
 
+    Returns
+    -------
+    list[str]
+        One line per user-facing update message (empty → nothing changed).
+    """
+    previous = load_state()       # {url: html}
+    current: dict[str, str] = {}
+    messages: list[str] = []
 
-def save_state(state: dict[str, str]) -> None:
-    """
-    Overwrite state.json with the given map { url: content }.
-    """
-    blob = _blob(_STATE_BLOB)
-    blob.upload_from_string(json.dumps(state, ensure_ascii=False), content_type="application/json")
+    for p in PRACTICES:
+        name, url = p["name"], p["url"]
+        try:
+            html = fetch_content(url, p["selector"], p["get_full_html"])
+            current[url] = html
+        except Exception as exc:   # network / selector / HTTP error
+            _LOG.warning("Fetch failed for %s: %s", url, exc)
+            messages.append(f"⚠️ <b>{name}</b> could not be fetched.")
+            continue
 
+        if url not in previous:
+            messages.append(f"🆕 <b>{name}</b> added to watch-list.")
+        elif previous[url] != html:
+            messages.append(f"✏️ <b>{name}</b> vacancy page changed.")
 
-def archive_snapshot(state: dict[str, str]) -> None:
-    """
-    Write a timestamped JSON file under snapshots/, e.g.:
-      snapshots/20250604_210000.json
-    containing the full { url: content } map.
-    """
-    now = datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-    name = f"{_SNAPSHOTS_DIR}{now}.json"
-    blob = _blob(name)
-    blob.upload_from_string(json.dumps(state, ensure_ascii=False), content_type="application/json")
+    # -- persistence ----------------------------------------------------
+    save_state(current)
+    archive_snapshot(current)
+    _LOG.info("Cycle finished %s – %d messages", _now(), len(messages))
+    return messages
