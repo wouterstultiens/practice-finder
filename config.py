@@ -85,7 +85,7 @@ PRACTICES2 = [
     {
         "name": "Dental Clinics Colmschate",
         "url": "https://www.werkenbijdentalclinics.nl/vacatures/?_locatie=Colmschate",
-        "selector": "div.section-element.section-element-vacancies-archive.\@container\/element-vacancies-archive",
+        "selector": "div.section-element.section-element-vacancies-archive",
         "get_full_html": False
     },
     {
@@ -163,7 +163,7 @@ PRACTICES2 = [
     {
         "name": "Dental Clinics Apeldoorn",
         "url": "https://www.werkenbijdentalclinics.nl/vacatures/?_locatie=Apeldoorn",
-        "selector": "div.section-element.section-element-vacancies-archive.\@container\/element-vacancies-archive",
+        "selector": "div.section-element.section-element-vacancies-archive",
         "get_full_html": False
     },
     {
@@ -332,13 +332,13 @@ PRACTICES2 = [
     {
         "name": "Dental Clinics Hengelo",
         "url": "https://www.werkenbijdentalclinics.nl/vacatures/?_locatie=Hengelo",
-        "selector": "div.section-element.section-element-vacancies-archive.\@container\/element-vacancies-archive",
+        "selector": "div.section-element.section-element-vacancies-archive",
         "get_full_html": False
     },
     {
         "name": "Dental Clinics Enschede",
         "url": "https://www.werkenbijdentalclinics.nl/vacatures/?_locatie=Enschede",
-        "selector": "div.section-element.section-element-vacancies-archive.\@container\/element-vacancies-archive",
+        "selector": "div.section-element.section-element-vacancies-archive",
         "get_full_html": False
     },
     {
@@ -458,7 +458,7 @@ PRACTICES2 = [
     {
         "name": "Dental Clinics Nijverdal",
         "url": "https://www.werkenbijdentalclinics.nl/vacatures/?_locatie=Nijverdal",
-        "selector": "div.section-element.section-element-vacancies-archive.\@container\/element-vacancies-archive",
+        "selector": "div.section-element.section-element-vacancies-archive",
         "get_full_html": False
     },
     {
