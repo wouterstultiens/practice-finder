@@ -30,4 +30,4 @@ def fetch_content(url: str, selector: str, get_full_html: bool, print_soup: bool
     if get_full_html:
         return str(element).replace("\n", "") if element else ""
     else:
-        return element.get_text(strip=True, separator=" ") if element else ""
+        return element.get_text(strip=True, separator=" ").replace("\n", "")  if element else ""
