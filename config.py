@@ -59,27 +59,6 @@ PRACTICES = [
         "name": "De Deventer Tandartspraktijk",
         "url": "https://www.dedeventertandartspraktijk.nl/vacatures",
         "selector": "article#post-131",
-        "get_full_html": True
-    },
-    {
-        "name": "Dental Clinics Colmschate",
-        "url": "https://www.werkenbijdentalclinics.nl/vacatures/?_locatie=Colmschate",
-        "selector": "div.section-element.section-element-vacancies-archive",
-        "get_full_html": False
-    },
-    {
-        "name": "De Watersnip",
-        "url": "https://dewatersnip.com/vacatures",
-        "selector": "div#vacature-overzichtje",
-        "get_full_html": False
-    },
-]
-
-PRACTICES2 = [
-    {
-        "name": "De Deventer Tandartspraktijk",
-        "url": "https://www.dedeventertandartspraktijk.nl/vacatures",
-        "selector": "article#post-131",
         "get_full_html": False
     },
     {

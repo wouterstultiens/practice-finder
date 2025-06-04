@@ -4,17 +4,21 @@ Persist full page‐content snapshots to GCS.
 
 - state.json holds the latest content for each URL (used for diffing).
 - snapshots/YYYYMMDD_HHMMSS.json archives the full content of each run.
+- snapshots/failed/YYYYMMDD_HHMMSS.json archives any URLs that failed during that run.
 """
 
-import os, json, datetime
+import os
+import json
+import datetime
 from google.cloud import storage
 
 _BUCKET_NAME = os.environ["STATE_BUCKET"]
 _storage = storage.Client()
-_bucket  = _storage.bucket(_BUCKET_NAME)
+_bucket = _storage.bucket(_BUCKET_NAME)
 
-_STATE_BLOB    = "state.json"
+_STATE_BLOB = "state.json"
 _SNAPSHOTS_DIR = "snapshots/"
+_FAILED_DIR = "snapshots/failed/"
 
 
 def _blob(name: str):
@@ -37,16 +41,37 @@ def save_state(state: dict[str, str]) -> None:
     Overwrite state.json with the given map { url: content }.
     """
     blob = _blob(_STATE_BLOB)
-    blob.upload_from_string(json.dumps(state, ensure_ascii=False), content_type="application/json")
+    blob.upload_from_string(
+        json.dumps(state, ensure_ascii=False),
+        content_type="application/json",
+    )
 
 
-def archive_snapshot(state: dict[str, str]) -> None:
+def archive_snapshot(state: dict[str, str]) -> str:
     """
     Write a timestamped JSON file under snapshots/, e.g.:
       snapshots/20250604_210000.json
     containing the full { url: content } map.
+    Returns the timestamp string (YYYYMMDD_HHMMSS) so callers can reuse it.
     """
     now = datetime.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     name = f"{_SNAPSHOTS_DIR}{now}.json"
-    blob = _blob(name)
-    blob.upload_from_string(json.dumps(state, ensure_ascii=False), content_type="application/json")
+    _blob(name).upload_from_string(
+        json.dumps(state, ensure_ascii=False),
+        content_type="application/json",
+    )
+    return now
+
+
+def archive_failures(failed_urls: list[str], ts: str) -> None:
+    """
+    Persist a JSON list of URLs that failed during this run.
+    Writes to snapshots/failed/YYYYMMDD_HHMMSS.json.
+    """
+    if not failed_urls:
+        return
+    name = f"{_FAILED_DIR}{ts}.json"
+    _blob(name).upload_from_string(
+        json.dumps(failed_urls, ensure_ascii=False),
+        content_type="application/json",
+    )

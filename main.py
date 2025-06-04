@@ -1,4 +1,6 @@
-import logging, functions_framework
+import logging
+import asyncio
+import functions_framework
 from monitor import run_once
 import notifier
 
