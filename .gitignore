@@ -3,3 +3,4 @@
 *.log
 data/
 practice-finder.iml
+__pycache__/
