@@ -15,7 +15,7 @@ def run_once() -> None:
     hour_str = now.strftime("%H:00")
 
     for practice in PRACTICES:
-        content = fetch_content(practice["url"], practice["selector"])
+        content = fetch_content(practice["url"], practice["selector"], practice["get_full_html"])
         row = {
             "practice": practice["name"],
             "url": practice["url"],
