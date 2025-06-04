@@ -4,9 +4,9 @@ and append their current vacancy section to the CSV.
 Run this every hour via cron or Task Scheduler.
 """
 from datetime import datetime
-from .config import PRACTICES, CSV_PATH
-from .fetch import fetch_content
-from .storage import save_snapshot
+from config import PRACTICES, CSV_PATH
+from fetch import fetch_content
+from storage import save_snapshot
 
 
 def run_once() -> None:

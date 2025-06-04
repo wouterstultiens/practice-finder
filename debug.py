@@ -1,21 +1,15 @@
-"""
-Quick‑and‑dirty helper to experiment with selectors.
-Example:
-    python debug.py "https://example.com/jobs" "div#vacancies"
-"""
-import argparse, textwrap
-from .fetch import fetch_content
+import argparse
+from fetch import fetch_content
+from config import PRACTICES
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Debug CSS selector for a vacancy page.")
-    parser.add_argument("url", help="Vacancy page URL")
-    parser.add_argument("selector", help="CSS selector to isolate vacancy content")
+    parser.add_argument("id", help="Index of practice")
     args = parser.parse_args()
 
-    content = fetch_content(args.url, args.selector)
-    preview = textwrap.shorten(content, width=500, placeholder=" …")
-    print(f"🔍 Extracted ({len(content)} chars):\\n")
-    print(preview)
+    practice = PRACTICES[int(args.id)]
+    content = fetch_content(practice["url"], practice["selector"], True)
+    print(f"\nCONTENT:\n{content}")
 
 if __name__ == "__main__":
     main()

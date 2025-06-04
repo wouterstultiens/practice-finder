@@ -5,10 +5,10 @@ import requests
 from bs4 import BeautifulSoup
 
 HEADERS = {
-    "User-Agent": "VacancyMonitor/1.0 (+https://github.com/your-org/vacancy-monitor)"
+    "User-Agent": "Mozilla/5.0"
 }
 
-def fetch_content(url: str, selector: str) -> str:
+def fetch_content(url: str, selector: str, print_soup: bool = False) -> str:
     """
     Download *url* and return the text content of the first element
     that matches *selector*. Returns an empty string if nothing matched.
@@ -17,5 +17,8 @@ def fetch_content(url: str, selector: str) -> str:
     resp.raise_for_status()
 
     soup = BeautifulSoup(resp.text, "html.parser")
+    if print_soup:
+        print("\nSOUP:\n")
+        print(soup.prettify())
     element = soup.select_one(selector)
     return element.get_text(strip=True, separator=" ") if element else ""
