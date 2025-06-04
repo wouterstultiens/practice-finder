@@ -3,6 +3,8 @@ from pathlib import Path
 CSV_PATH = Path("data/content.csv")
 
 # TODO: ADD https://careers.dentalvacancies.eu/colosseum-dental/search/?createNewAlert=false&q=&locationsearch=&optionsFacetsDD_shifttype=&optionsFacetsDD_customfield1=&optionsFacetsDD_city=&optionsFacetsDD_state=
+# TODO: ADD https://www.facebook.com/100067850752335/posts/1003611035243912/?_rdr
+# TODO: ADD veluwe tandartsen apeldoorn vacature linkedin
 PRACTICES = [
     {
         "name": "De Deventer Tandartspraktijk",
@@ -188,6 +190,12 @@ PRACTICES = [
         "name": "Tandheelkundig Centrum Holten",
         "url": "https://tandartsenholten.tandartsennet.nl/vacatures/",
         "selector": "main#main",
+        "get_full_html": False
+    },
+    { # TODO: Fix linebreaks
+        "name": "Tandartspraktijk Emanuel",
+        "url": "https://tandartsemanuel.nl/vacature.htm",
+        "selector": "td[style='border-style: solid; border-width: 0; padding-left: 4; padding-right: 4; padding-top: 1; padding-bottom: 1; margin-top:-2; margin-bottom:-2']",
         "get_full_html": False
     },
 ]
