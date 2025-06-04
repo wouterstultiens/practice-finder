@@ -59,12 +59,12 @@ PRACTICES = [
         "name": "De Deventer Tandartspraktijk",
         "url": "https://www.dedeventertandartspraktijk.nl/vacatures",
         "selector": "article#post-131",
-        "get_full_html": False
+        "get_full_html": True
     },
     {
         "name": "Dental Clinics Colmschate",
         "url": "https://www.werkenbijdentalclinics.nl/vacatures/?_locatie=Colmschate",
-        "selector": "div.section-element.section-element-vacancies-archive.\@container\/element-vacancies-archive",
+        "selector": "div.section-element.section-element-vacancies-archive",
         "get_full_html": False
     },
     {

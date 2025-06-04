@@ -15,7 +15,9 @@ _IDS  = [cid.strip() for cid in os.environ["CHAT_IDS"].split(",") if cid.strip()
 
 def send(messages: Iterable[str]) -> None:
     for msg in messages:
+        _LOG.info(f"Sending message: {msg}")
         for cid in _IDS:
+            _LOG.info(f"To id: {cid}")
             try:
                 _bot.send_message(chat_id=cid, text=msg, parse_mode=constants.ParseMode.HTML)
             except Exception as exc:  # pragma: no cover
