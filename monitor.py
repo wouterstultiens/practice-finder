@@ -15,7 +15,11 @@ def run_once() -> None:
     hour_str = now.strftime("%H:00")
 
     for practice in PRACTICES:
-        content = fetch_content(practice["url"], practice["selector"], practice["get_full_html"])
+        try:
+            print(f"Fetching content of {practice['url']}")
+            content = fetch_content(practice["url"], practice["selector"], practice["get_full_html"])
+        except Exception as e:
+            print(f"Error while fetching content of {practice['url']}")
         row = {
             "practice": practice["name"],
             "url": practice["url"],
