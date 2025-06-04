@@ -31,4 +31,4 @@ def fetch_content(url: str, selector: str, get_full_html: bool, print_soup: bool
     if get_full_html:
         return str(element).replace("\n", "") if element else ""
     else:
-        return re.sub(r'\s+', ' ', element.get_text(separator=' ').strip()) if element else ""
+        return re.sub(r'[\u200B-\u200D\uFEFF]|\s+', ' ', element.get_text(separator=' ').strip()) if element else ""
