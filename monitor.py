@@ -1,34 +1,34 @@
 """
-Main entry point – iterate over all practices defined in config.py
-and append their current vacancy section to the CSV.
-Run this every hour via cron or Task Scheduler.
+Detect content changes for every practice.
+Return a list of user-friendly messages that must be broadcast.
 """
 from datetime import datetime
-from config import PRACTICES, CSV_PATH
+from typing import List
+from config import PRACTICES
 from fetch import fetch_content
-from storage import save_snapshot
+import state, logging
+
+_LOG = logging.getLogger(__name__)
 
 
-def run_once() -> None:
-    now = datetime.now()
-    date_str = now.strftime("%Y-%m-%d")
-    hour_str = now.strftime("%H:00")
+def run_once() -> List[str]:
+    previous = state.load()
+    now_hash  = {}
+    changes: List[str] = []
 
-    for practice in PRACTICES:
+    for p in PRACTICES:
         try:
-            print(f"Fetching content of {practice['url']}")
-            content = fetch_content(practice["url"], practice["selector"], practice["get_full_html"])
-        except Exception as e:
-            print(f"Error while fetching content of {practice['url']}")
-        row = {
-            "practice": practice["name"],
-            "url": practice["url"],
-            "date": date_str,
-            "hour": hour_str,
-            "content": content,
-        }
-        save_snapshot(CSV_PATH, row)
+            text = fetch_content(p["url"], p["selector"], p["get_full_html"])
+        except Exception as exc:
+            _LOG.warning("Fetch failed for %s: %s", p["url"], exc)
+            continue
 
+        h = state.digest(text)
+        now_hash[p["url"]] = h
 
-if __name__ == "__main__":
-    run_once()
+        if previous.get(p["url"]) and previous[p["url"]] != h:
+            ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+            changes.append(f"🔔 <b>{p['name']}</b> updated (<a href=\"{p['url']}\">vacature</a>) – {ts}")
+
+    state.save(now_hash)
+    return changes

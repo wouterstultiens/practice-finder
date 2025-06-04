@@ -1,2 +1,5 @@
 requests
 beautifulsoup4
+python-telegram-bot==20.2
+google-cloud-storage
+functions-framework
