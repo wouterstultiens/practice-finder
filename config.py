@@ -71,6 +71,9 @@ CSV_PATH = Path("data/content.csv")
 # https://tandartsheeten.nl/
 # https://www.tandartsholten.nl/
 # https://www.tandartskleinnagelvoort.nl/
+# https://www.tandartspraktijkschalkhaar.nl/
+# https://www.tandartsvanegdom.nl/
+# https://tandenrijkzutphenzuid.nl/
 
 # Closed
 # https://www.tandartsugchelen.nl/
@@ -637,6 +640,54 @@ PRACTICES = [
         "selector": "div.elementor-element-14d056b",
         "get_full_html": False
     },
+    {
+        "name": "Tandartspraktijk Nelis",
+        "url": "https://tandartspraktijknelis.nl/vacatures/",
+        "selector": "div#fl-main-content",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartsenpraktijk Pronk",
+        "url": "https://www.tandartspronk.nl/vacatures/",
+        "selector": "div.elementor-302",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandarts Putten",
+        "url": "https://www.tandartsputten.nl/werken-bij/",
+        "selector": "div.theme-content.no-padding",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartsenpraktijk Vermeulen",
+        "url": "https://tandartsvermeulen.nl/over-ons/vacatures/",
+        "selector": "div#contentwrapper",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartspraktijk in de Vijfhoek",
+        "url": "https://www.trotsopjetanden.nl/vacatures/",
+        "selector": "div.contentMain",
+        "get_full_html": False
+    },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
     # {
     #     "name": "",
     #     "url": "",
