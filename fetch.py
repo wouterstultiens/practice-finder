@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from typing import Optional
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
-_TIMEOUT = aiohttp.ClientTimeout(total=15)
+_TIMEOUT = aiohttp.ClientTimeout(total=60)
 
 # ---------------------------------------------------------------------------- #
 # Internal helpers                                                             #
