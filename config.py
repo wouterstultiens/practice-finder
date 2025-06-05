@@ -14,6 +14,8 @@ CSV_PATH = Path("data/content.csv")
 # TODO: ADD https://delievetandarts.nl/
 # TODO: ADD tandarts putten FB (and other via FB)
 # TODO: ADD orthocenter.nl
+# TODO: ADD Zutphen Zuid FB https://www.facebook.com/groups/1297100880302176/posts/7780834505262082/
+# TODO: ADD mondhygienisten.nl
 
 # No vacancy page:
 # https://www.tandartsencentrumhattem.nl/
@@ -93,6 +95,14 @@ CSV_PATH = Path("data/content.csv")
 # https://www.123tandartsenenorthodontie.nl
 # https://mondhygienetwello.nl
 # https://mpdeventer.nl/
+# https://bto.nu/
+# https://www.tandartsthe.nl/
+# https://tandenrijkzutphenzuid.nl/ (FB)
+# https://www.tppdiseraad.nl/
+# https://www.praktijkzutphen.nl
+# https://gelreland.nl/
+# https://www.smilezzutphen.nl
+# https://www.heleenkaatman.nl/
 
 # Closed
 # https://www.tandartsugchelen.nl/
@@ -720,17 +730,11 @@ PRACTICES = [
         "get_full_html": False
     },
     {
-        "name": "",
-        "url": "",
-        "selector": "",
+        "name": "Dental Care Zutphen",
+        "url": "https://www.dentalcarezutphen.nl/vacature/",
+        "selector": "div.blog-post",
         "get_full_html": False
     },
-    # {
-    #     "name": "",
-    #     "url": "",
-    #     "selector": "",
-    #     "get_full_html": False
-    # },
     # {
     #     "name": "",
     #     "url": "",
