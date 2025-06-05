@@ -71,7 +71,7 @@ async def fetch_content_async(
         raw = await resp.read()
 
     try:
-        return _extract_content(raw.decode("utf-8"), selector, get_full_html)
+        return _extract_content(raw.decode("utf-8"), selector, get_full_html, False)
     except UnicodeDecodeError:
         soup = BeautifulSoup(raw, "html.parser")
         element = soup.select_one(selector)

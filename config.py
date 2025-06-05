@@ -471,9 +471,33 @@ PRACTICES = [
         "get_full_html": False
     },
     {
-        "name": "Colosseum Dental",
-        "url": "https://careers.dentalvacancies.eu/colosseum-dental/search",
-        "selector": "table#searchresults",
+        "name": "Colosseum Dental Apeldoorn",
+        "url": "https://careers.dentalvacancies.eu/colosseum-dental/search/?optionsFacetsDD_city=Apeldoorn",
+        "selector": "div#content",
+        "get_full_html": False
+    },
+    {
+        "name": "Colosseum Dental Arnhem",
+        "url": "https://careers.dentalvacancies.eu/colosseum-dental/search/?optionsFacetsDD_city=Arnhem",
+        "selector": "div#content",
+        "get_full_html": False
+    },
+    {
+        "name": "Colosseum Dental Dalfsen",
+        "url": "https://careers.dentalvacancies.eu/colosseum-dental/search/?optionsFacetsDD_city=Dalfsen",
+        "selector": "div#content",
+        "get_full_html": False
+    },
+    {
+        "name": "Colosseum Dental Rijssen",
+        "url": "https://careers.dentalvacancies.eu/colosseum-dental/search/?optionsFacetsDD_city=Rijssen",
+        "selector": "div#content",
+        "get_full_html": False
+    },
+    {
+        "name": "Colosseum Dental Zwolle",
+        "url": "https://careers.dentalvacancies.eu/colosseum-dental/search/?optionsFacetsDD_city=Zwolle",
+        "selector": "div#content",
         "get_full_html": False
     },
 ]
