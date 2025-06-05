@@ -52,7 +52,31 @@ def fetch_content(  # kept for CLI debugging
     """
     resp = requests.get(url, headers=HEADERS, timeout=15)
     resp.raise_for_status()
-    return _extract_content(resp.text, selector, get_full_html, print_soup=print_soup)
+    raw = resp.content
+
+    try:
+        # First try UTF-8 decode
+        text = raw.decode("utf-8")
+        return _extract_content(text, selector, get_full_html, print_soup=print_soup)
+    except UnicodeDecodeError:
+        # Fallback: let BeautifulSoup detect encoding from raw bytes
+        soup = BeautifulSoup(raw, "html.parser")
+        if print_soup:
+            print("\nSOUP:\n")
+            print(soup.prettify())
+
+        element = soup.select_one(selector)
+        if not element:
+            raise ValueError("HTML element not found")
+
+        if get_full_html:
+            return str(element).replace("\n", "")
+
+        return re.sub(
+            r"[\u200B-\u200D\uFEFF]|\s+",
+            " ",
+            element.get_text(separator=" ").strip()
+        )
 
 async def fetch_content_async(
     session: aiohttp.ClientSession, url: str, selector: str, get_full_html: bool
@@ -63,8 +87,25 @@ async def fetch_content_async(
     """
     async with session.get(url, timeout=_TIMEOUT) as resp:
         resp.raise_for_status()
-        text = await resp.text()
-    return _extract_content(text, selector, get_full_html)
+        raw = await resp.read()
+
+    try:
+        text = raw.decode("utf-8")
+        return _extract_content(text, selector, get_full_html)
+    except UnicodeDecodeError:
+        soup = BeautifulSoup(raw, "html.parser")
+        element = soup.select_one(selector)
+        if not element:
+            raise ValueError("HTML element not found")
+
+        if get_full_html:
+            return str(element).replace("\n", "")
+
+        return re.sub(
+            r"[\u200B-\u200D\uFEFF]|\s+",
+            " ",
+            element.get_text(separator=" ").strip()
+        )
 
 # Re-export for convenience -------------------------------------------------- #
 
