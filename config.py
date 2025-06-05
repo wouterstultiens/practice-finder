@@ -12,6 +12,7 @@ CSV_PATH = Path("data/content.csv")
 # TODO: ADD https://gaevdental.recruitee.com/
 # TODO: ADD https://vacatures.tandartspraktijk.nl/
 # TODO: ADD https://delievetandarts.nl/
+# TODO: ADD tandarts putten FB (and other via FB)
 
 # No vacancy page:
 # https://www.tandartsencentrumhattem.nl/
@@ -650,12 +651,6 @@ PRACTICES = [
         "name": "Tandartsenpraktijk Pronk",
         "url": "https://www.tandartspronk.nl/vacatures/",
         "selector": "div.elementor-302",
-        "get_full_html": False
-    },
-    {
-        "name": "Tandarts Putten",
-        "url": "https://www.tandartsputten.nl/werken-bij/",
-        "selector": "div.theme-content.no-padding",
         "get_full_html": False
     },
     {
