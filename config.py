@@ -2,14 +2,14 @@ from pathlib import Path
 
 CSV_PATH = Path("data/content.csv")
 
-# TODO: ADD https://careers.dentalvacancies.eu/colosseum-dental/search/?createNewAlert=false&q=&locationsearch=&optionsFacetsDD_shifttype=&optionsFacetsDD_customfield1=&optionsFacetsDD_city=&optionsFacetsDD_state=
 # TODO: ADD https://www.facebook.com/100067850752335/posts/1003611035243912/?_rdr
 # TODO: ADD veluwe tandartsen apeldoorn vacature linkedin
 # TODO: ADD https://www.tandartskleinnagelvoort.nl/
 # TODO: ADD Apeldoornse Kliniek voor Parodontologie en Implantologie indeed?
-# TODO: ADD dentalcareprofessionals
-# TODO: ADD KNMT, Indeed, ...
+# TODO: ADD Indeed, ...
 # TODO: ADD https://www.mondhoek.nl/vacatures/ (javascript thingy)
+# TODO: ADD alle grote plaatsen nog een keer langsgaan, die hebben >10 praktijken waarschijnlijk
+# TODO: ADD https://gaevdental.recruitee.com/
 
 # No vacancy page:
 # https://www.tandartsencentrumhattem.nl/
@@ -42,7 +42,11 @@ CSV_PATH = Path("data/content.csv")
 # https://www.tandartsenpraktijkzaadmarkt.nl/
 # https://www.praktijkbraam.nl/
 # https://bto.nu/
-# https://smiledent-apeldoorn.nl/
+# https://tandartspraktijkexcellentia.tandartsennet.nl/
+# https://www.tandartspraktijkvandewerken.nl/
+# https://www.tandartsdenotter.nl/
+# https://tandartspraktijkholtenbroek.tandartsennet.nl/
+# https://adtandartsen.tandartsennet.nl/
 
 # Closed
 # https://www.tandartsugchelen.nl/
@@ -500,4 +504,34 @@ PRACTICES = [
         "selector": "div#content",
         "get_full_html": False
     },
+    {
+        "name": "KNMT Overijssel",
+        "url": "https://knmt.nl/vacatures?vacatures%5B0%5D=work_area%3AOverijssel",
+        "selector": "div.views-infinite-scroll-content-wrapper.clearfix",
+        "get_full_html": False
+    },
+    {
+        "name": "KNMT Gelderland",
+        "url": "https://knmt.nl/vacatures?vacatures%5B0%5D=work_area%3AGelderland",
+        "selector": "div.views-infinite-scroll-content-wrapper.clearfix",
+        "get_full_html": False
+    },
+    {
+        "name": "Boersma & Boersma",
+        "url": "https://boersma-tandheelkunde.nl/vacatures/",
+        "selector": "main#main",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartspraktijk La Roi",
+        "url": "https://www.tandartslaroi.nl/werken-bij/",
+        "selector": "main.wrapper-main",
+        "get_full_html": False
+    },
+    {
+        "name": "Mondzorg Centrum Overtoom",
+        "url": "https://www.mondzorgcentrumovertoom.nl/vacatures/",
+        "selector": "div.wpb_column.vc_column_container.vc_col-sm-8 ",
+        "get_full_html": False
+    }
 ]

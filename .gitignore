@@ -6,3 +6,4 @@ practice-finder.iml
 __pycache__/
 *.xml
 env.yaml   
+*.csv
