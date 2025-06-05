@@ -13,6 +13,7 @@ CSV_PATH = Path("data/content.csv")
 # TODO: ADD https://vacatures.tandartspraktijk.nl/
 # TODO: ADD https://delievetandarts.nl/
 # TODO: ADD tandarts putten FB (and other via FB)
+# TODO: ADD orthocenter.nl
 
 # No vacancy page:
 # https://www.tandartsencentrumhattem.nl/
@@ -75,6 +76,23 @@ CSV_PATH = Path("data/content.csv")
 # https://www.tandartspraktijkschalkhaar.nl/
 # https://www.tandartsvanegdom.nl/
 # https://tandenrijkzutphenzuid.nl/
+# https://www.tandartspoort.nl/
+# https://pw3mondzorg.nl/
+# https://apeldoornorthodontie.nl/
+# https://wktandartsen.nl/
+# https://www.tandartspraktijkvos.nl/
+# https://www.thvtandartsen.nl/
+# https://www.mondhygienepraktijkzuid.nl/
+# https://www.mondhygienistenprakteik.nl/
+# https://www.mhpraktijkenparoplus.nl/
+# https://tandartspraktijkhansjorna.tandartsennet.nl/
+# https://www.tppwesthof.nl
+# https://aliekefischer.nl/
+# https://tandheelkunde-centrum.nl/
+# https://tandartskerkstraat.nl/
+# https://www.123tandartsenenorthodontie.nl
+# https://mondhygienetwello.nl
+# https://mpdeventer.nl/
 
 # Closed
 # https://www.tandartsugchelen.nl/
@@ -665,6 +683,96 @@ PRACTICES = [
         "selector": "div.contentMain",
         "get_full_html": False
     },
+    {
+        "name": "Tandprothetische Praktijk Van Woudenberg",
+        "url": "https://tppvanwoudenberg.nl/vacatures/",
+        "selector": "div.et_pb_column.et_pb_column_4_4.et_pb_column_0.et_pb_css_mix_blend_mode_passthrough.et-last-child",
+        "get_full_html": False
+    },
+    {
+        "name": "Oranjepark Orthodontie",
+        "url": "https://oranjeparkorthodontie.nl/vacatures/",
+        "selector": "article#post-590",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandprothetische Praktijk Broekhuis",
+        "url": "https://www.tppbroekhuis.nl/team/",
+        "selector": "section.wpb_row.height_auto",
+        "get_full_html": False
+    },
+    {
+        "name": "Apeldoornse Kliniek Voor Parodontologie En Implantologie",
+        "url": "https://akpi.nl/",
+        "selector": "div.elementor-element-d47bccd",
+        "get_full_html": False
+    },
+    {
+        "name": "Fresh Unieke Mondzorg",
+        "url": "https://www.freshuniekemondzorg.nl/vacatures/",
+        "selector": "div.team.module.bg-image.fixed.container-fluid.vacancy",
+        "get_full_html": False
+    },
+    {
+        "name": "Orthodontiepraktijk Deventer",
+        "url": "https://orthodontiepraktijkdeventer.nl/vacatures",
+        "selector": "section.span12",
+        "get_full_html": False
+    },
+    {
+        "name": "",
+        "url": "",
+        "selector": "",
+        "get_full_html": False
+    },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
     # {
     #     "name": "",
     #     "url": "",
