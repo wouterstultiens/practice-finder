@@ -8,7 +8,7 @@ CSV_PATH = Path("data/content.csv")
 # TODO: ADD Apeldoornse Kliniek voor Parodontologie en Implantologie indeed?
 # TODO: ADD Indeed, ...
 # TODO: ADD https://www.mondhoek.nl/vacatures/ (javascript thingy)
-# TODO: ADD alle grote plaatsen nog een keer langsgaan, die hebben >10 praktijken waarschijnlijk
+# TODO: ADD alle grote plaatsen nog een keer langsgaan, die hebben >10 praktijken waarschijnlijk (Apeldoorn vooral)
 # TODO: ADD https://gaevdental.recruitee.com/
 # TODO: ADD https://vacatures.tandartspraktijk.nl/
 # TODO: ADD https://delievetandarts.nl/
@@ -58,7 +58,19 @@ CSV_PATH = Path("data/content.csv")
 # https://www.dentalzorgapeldoorn.nl/
 # https://www.tandartswijhe.nl/
 # https://www.mondzorgkliniekolst.nl/
-# https://www.jungletandartsen.n
+# https://www.jungletandartsen.nl
+# https://tandartspraktijkapeldoornzuid.nl/
+# https://mondzorgexcellent.nl/
+# https://www.mondzorgloenen.nl/
+# https://mondzorgwekerom.nl/
+# https://otterlo.tandartsennet.nl/
+# https://spto.nl/
+# https://tandartspraktijk-manokian.tandartsennet.nl/
+# https://www.tandartsenpraktijksanderink-daalmans.nl/
+# https://tandartsenpraktijkstjozef.nl/
+# https://tandartsheeten.nl/
+# https://www.tandartsholten.nl/
+# https://www.tandartskleinnagelvoort.nl/
 
 # Closed
 # https://www.tandartsugchelen.nl/
@@ -584,21 +596,69 @@ PRACTICES = [
         "get_full_html": False
     },
     {
-        "name": "",
-        "url": "",
-        "selector": "",
+        "name": "Mondzorg Dalfsen",
+        "url": "https://mondzorgdalfsen.nl/vacatures.html",
+        "selector": "div#Section1",
         "get_full_html": False
     },
     {
-        "name": "",
-        "url": "",
-        "selector": "",
+        "name": "Mondzorgpraktijk Garderen",
+        "url": "https://www.mondzorgpraktijkgarderen.nl/praktijkinformatie/vacatures-en-stage",
+        "selector": "div.container.container-white.container-overlying.container-shadow",
         "get_full_html": False
     },
     {
-        "name": "",
-        "url": "",
-        "selector": "",
+        "name": "Tandartspraktijk Alberga",
+        "url": "https://www.tandarts-zutphen.nl/vacature/",
+        "selector": "div#main",
         "get_full_html": False
-    }
+    },
+    {
+        "name": "Tandartspraktijk Elspeet",
+        "url": "https://www.tandartselspeet.nl/vacatures/",
+        "selector": "div.elementor.elementor-346",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartsenpraktijk Apeldoornseweg",
+        "url": "https://www.tandartsenapeldoornseweg.nl/vacatures/",
+        "selector": "div.mainContent",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartspraktijk Het Centrum",
+        "url": "https://tandartsenpraktijkhetcentrum.nl/",
+        "selector": "div#team",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandarts Lochem",
+        "url": "https://www.tandartslochem.nl/vacatures/",
+        "selector": "div.elementor-element-14d056b",
+        "get_full_html": False
+    },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # },
+    # {
+    #     "name": "",
+    #     "url": "",
+    #     "selector": "",
+    #     "get_full_html": False
+    # }
 ]
