@@ -71,8 +71,8 @@ async def _run_async(ts: str) -> Tuple[Dict[str, str], List[str], List[str]]:
                         f"🔗 <a href='{url}'>Open vacaturepagina</a>\n\n"
                         f"{summary}"
                     )
-            except Exception as exc:
-                _LOG.warning("Fetch failed for %s: %s", url, exc)
+            except Exception:
+                _LOG.exception("Fetch failed for %s", url)
                 messages.append(f"⚠️ <b>{name}</b> kon niet worden opgehaald.")
                 failed.append(url)
 

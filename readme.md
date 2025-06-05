@@ -33,6 +33,7 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
    export BOT_TOKEN=<your-telegram-bot-token>
    export CHAT_IDS=<comma-separated-chat-ids>
    export STATE_BUCKET=<your-gcs-bucket-name>
+   export OPENAI_API_KEY=<your-openai-api-key>
    ```
 
 3. **Local Testing (CLI Mode)**
@@ -53,7 +54,7 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
 
 ## Configuration
 
-* **Vacancy Definitions**:
+* **Vacancy Definitions**:  
   Edit `config.py` → `PRACTICES` list. Each item has:
 
   ```python
@@ -98,7 +99,7 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
      --source=. \
      --trigger-http \
      --timeout=180s \
-     --set-env-vars "BOT_TOKEN=${BOT_TOKEN},CHAT_IDS=${CHAT_IDS},STATE_BUCKET=${STATE_BUCKET}"
+     --set-env-vars "BOT_TOKEN=${BOT_TOKEN},CHAT_IDS=${CHAT_IDS},STATE_BUCKET=${STATE_BUCKET},OPENAI_API_KEY=${OPENAI_API_KEY}"
    ```
 
 4. **Update Cloud Scheduler Job (if URL changed)**
@@ -148,6 +149,7 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
 ├── main.py
 ├── monitor.py
 ├── notifier.py
+├── readme.md
 ├── requirements.txt
 ├── state.py
 ├── storage.py
@@ -161,9 +163,7 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
 1. **Monitoring Flow**
 
    * `monitor.run_once()` fetches all URLs (concurrently), diffs against `state.json` in GCS, archives a new snapshot, logs failures, updates `state.json`, and returns a list of human-readable messages.
-
    * `notifier.send(messages)` either prints (CLI mode) or sends to Telegram.
-
    * In Cloud Function mode, `main(request)` calls `run_once()` on each HTTP trigger (hourly via Scheduler).
 
 2. **Debugging a Single Vacancy Fetch**
@@ -172,29 +172,37 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
    python debug.py <index>
    ```
 
-   Where `<index>` is the zero-based index of a practice in `config.py`. Prints the extracted content for troubleshooting your CSS selector.
+   Where `<index>` is the zero-based index of a practice in `config.py`.
+   Prints the extracted content for troubleshooting your CSS selector.
+
+3. **Automatic Encoding Detection**
+
+   Pages served in encodings like ISO-8859-1 or Windows-1252 are handled seamlessly:
+
+   * It first attempts to decode the response body as UTF-8.
+   * If that fails, it feeds the raw bytes into BeautifulSoup, which auto-detects the correct charset via `<meta charset>` or other heuristics.
+   * This means you no longer need to worry about `'utf-8' codec can't decode byte …` errors when hitting pages in Latin-1, etc.
+
+   Just make sure you're using the latest version of `fetch.py`.
 
 ---
 
 ## Development
 
 * Add or update entries in `config.py` → `PRACTICES` to watch new vacancy pages.
-
 * Use `python main.py` locally to verify before deploying.
-
 * If you modify `requirements.txt`, re-run `pip install -r requirements.txt` before deployment.
-
 * Logging uses `logging.INFO` by default—check Cloud Function logs for details.
 
 ---
 
 ## Dependencies
 
-* `aiohttp` – asynchronous HTTP requests
-* `beautifulsoup4` – HTML parsing & CSS selectors
-* `requests` – synchronous HTTP for CLI/debug
-* `python-telegram-bot` – Telegram notifications
-* `google-cloud-storage` – state & snapshot persistence in GCS
+* `aiohttp` – asynchronous HTTP requests  
+* `beautifulsoup4` – HTML parsing & CSS selectors  
+* `requests` – synchronous HTTP for CLI/debug  
+* `python-telegram-bot` – Telegram notifications  
+* `google-cloud-storage` – state & snapshot persistence in GCS  
 * `functions-framework` – Cloud Function entry point
 
 ---
