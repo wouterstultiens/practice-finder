@@ -17,9 +17,13 @@ _TIMEOUT = aiohttp.ClientTimeout(total=90)
 # ---------------------------------------------------------------------------- #
 # Internal helpers                                                             #
 # ---------------------------------------------------------------------------- #
-def _extract_content(html: str, selector: str, get_full_html: bool) -> str:
+def _extract_content(html: str, selector: str, get_full_html: bool, print_soup: bool) -> str:
     """Return the requested section from *html*."""
     soup = BeautifulSoup(html, "html.parser")
+    if print_soup:
+        print("SOUP:\n")
+        print(soup.prettify())
+
     element = soup.select_one(selector)
     if not element:
         raise ValueError("HTML element not found")
@@ -36,16 +40,19 @@ def _extract_content(html: str, selector: str, get_full_html: bool) -> str:
 # ---------------------------------------------------------------------------- #
 # Public sync helper (still used by debug CLI)                                 #
 # ---------------------------------------------------------------------------- #
-def fetch_content(url: str, selector: str, get_full_html: bool) -> str:
+def fetch_content(url: str, selector: str, get_full_html: bool, print_soup: bool = False) -> str:
     resp = requests.get(url, headers=HEADERS, timeout=15)
     resp.raise_for_status()
     raw = resp.content
 
     try:
-        return _extract_content(raw.decode("utf-8"), selector, get_full_html)
+        return _extract_content(raw.decode("utf-8"), selector, get_full_html, print_soup)
     except UnicodeDecodeError:
         # Fallback to BS-detected encoding
         soup = BeautifulSoup(raw, "html.parser")
+        if print_soup:
+            print("SOUP:\n")
+            print(soup.prettify())
         element = soup.select_one(selector)
         if not element:
             raise ValueError("HTML element not found")

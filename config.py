@@ -206,12 +206,6 @@ PRACTICES = [
     #     "get_full_html": False
     # },
     {
-        "name": "Tandartspraktijk Fabels",
-        "url": "https://www.tandartspraktijkfabels.nl/vacatures/",
-        "selector": "div.elementor-element-ea8dc42",
-        "get_full_html": False
-    },
-    {
         "name": "Tandheelkunde Hattem",
         "url": "https://www.tandheelkundehattem.nl/vacatures/",
         "selector": "section.elementor-element-e0e7409",
@@ -363,12 +357,6 @@ PRACTICES = [
     #     "get_full_html": False
     # },
     {
-        "name": "Tandartspraktijk de Tandhoek",
-        "url": "https://www.detandhoek.nl/?page_id=29",
-        "selector": "div.lijeva_rubrika_wide",
-        "get_full_html": False
-    },
-    {
         "name": "Tandartspraktijk A. Todea",
         "url": "https://www.tandartstodea.nl/vacatures/",
         "selector": "div.elementor-element-14d056b",
@@ -480,6 +468,12 @@ PRACTICES = [
         "name": "Mondzorg Steenderen",
         "url": "https://www.mondzorgsteenderen.nl/vacatures",
         "selector": "div.col-md-9",
+        "get_full_html": False
+    },
+    {
+        "name": "Colosseum Dental",
+        "url": "https://careers.dentalvacancies.eu/colosseum-dental/search",
+        "selector": "table#searchresults",
         "get_full_html": False
     },
 ]
