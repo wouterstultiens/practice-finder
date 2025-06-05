@@ -7,6 +7,8 @@ Persist full page‐content snapshots to GCS.
 - snapshots/failed/YYYYMMDD_HHMMSS.json archives any URLs that failed during that run.
 """
 
+import hashlib
+import urllib.parse
 import os
 import json
 import datetime
@@ -75,3 +77,15 @@ def archive_failures(failed_urls: list[str], ts: str) -> None:
         json.dumps(failed_urls, ensure_ascii=False),
         content_type="application/json",
     )
+
+
+def save_change_pair(url: str, old_html: str, new_html: str, ts: str) -> None:
+    """
+    Bewaart bij een gedetecteerde wijziging twee losse bestanden in de bucket:
+      diffs/<YYYYMMDD_HHMMSS>/<hash>/old.html
+      diffs/<YYYYMMDD_HHMMSS>/<hash>/new.html
+    """
+    slug = hashlib.sha1(url.encode()).hexdigest()[:10]          # korte hash → map-naam
+    path = f"diffs/{ts}/{slug}"
+    _blob(f"{path}/old.html").upload_from_string(old_html, content_type="text/html")
+    _blob(f"{path}/new.html").upload_from_string(new_html, content_type="text/html")
