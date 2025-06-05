@@ -79,7 +79,7 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
 1. **Reload `.env` (if needed)**
 
    ```bash
-   export $(grep -v '^#' .env | xargs)
+   export $(awk -F': ' '/^[^#].*:/{gsub(/"/, "", $2); printf "%s=%s ", $1, $2}' env.yaml)
    ```
 
 2. **(Re)Install Dependencies**
