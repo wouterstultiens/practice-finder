@@ -33,6 +33,7 @@ def send(messages: Iterable[str]) -> None:
                     chat_id=cid,
                     text=msg,
                     parse_mode=constants.ParseMode.HTML,
+                    disable_web_page_preview=True,
                 )
                 for cid in _IDS
             ]

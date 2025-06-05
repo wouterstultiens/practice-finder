@@ -63,12 +63,12 @@ async def _run_async(ts: str) -> Tuple[Dict[str, str], List[str], List[str]]:
                     )
                 elif previous[url] != html:
                     # Save old/new HTML
-                    save_change_pair(url, previous[url], html, ts)
+                    save_change_pair(name, url, previous[url], html, ts)
                     # Generate Dutch summary
                     summary = summarize_change(previous[url], html)
                     messages.append(
                         f"✏️ <b>{name}</b> vacaturepagina is gewijzigd.\n"
-                        f"🔗 <a href='{url}'>Bekijk pagina</a>\n"
+                        f"🔗 <a href='{url}'>Open vacaturepagina</a>\n\n"
                         f"{summary}"
                     )
             except Exception as exc:
