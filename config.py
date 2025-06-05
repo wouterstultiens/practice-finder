@@ -10,6 +10,8 @@ CSV_PATH = Path("data/content.csv")
 # TODO: ADD https://www.mondhoek.nl/vacatures/ (javascript thingy)
 # TODO: ADD alle grote plaatsen nog een keer langsgaan, die hebben >10 praktijken waarschijnlijk
 # TODO: ADD https://gaevdental.recruitee.com/
+# TODO: ADD https://vacatures.tandartspraktijk.nl/
+# TODO: ADD https://delievetandarts.nl/
 
 # No vacancy page:
 # https://www.tandartsencentrumhattem.nl/
@@ -47,15 +49,20 @@ CSV_PATH = Path("data/content.csv")
 # https://www.tandartsdenotter.nl/
 # https://tandartspraktijkholtenbroek.tandartsennet.nl/
 # https://adtandartsen.tandartsennet.nl/
+# https://www.tandartspraktijkstadshagen.nl/
+# https://tandartspraktijkrosendaal.nl/
+# https://www.tandartsenpraktijkforelkolk.nl/
+# http://tandartspraktijkevers.nl/
+# http://www.tandartstongeren.be/
+# https://www.alldentalcosmetics.nl/
+# https://www.dentalzorgapeldoorn.nl/
+# https://www.tandartswijhe.nl/
+# https://www.mondzorgkliniekolst.nl/
+# https://www.jungletandartsen.n
 
 # Closed
 # https://www.tandartsugchelen.nl/
 # https://tandartsvanheijst.nl/
-
-# Colosseum Dental
-# https://www.tandarts-apeldoorn-maten.nl/vacatures/
-# https://www.tandartsrijssen.nl/vacatures/
-# https://www.tandarts-apeldoorn-parken.nl/vacatures/
 
 
 PRACTICES = [
@@ -531,7 +538,67 @@ PRACTICES = [
     {
         "name": "Mondzorg Centrum Overtoom",
         "url": "https://www.mondzorgcentrumovertoom.nl/vacatures/",
-        "selector": "div.wpb_column.vc_column_container.vc_col-sm-8 ",
+        "selector": "div.wpb_column.vc_column_container.vc_col-sm-8",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartspraktijk Over De Brug",
+        "url": "https://www.tandartsoverdebrug.nl/",
+        "selector": "div.row_col_wrap_12.col.span_12.dark.left > div.vc_col-sm-6.wpb_column.column_container.vc_column_container.col.padding-10-percent.inherit_tablet.inherit_phone ",
+        "get_full_html": False
+    },
+    {
+        "name": "Tandartsenpraktijk Postema",
+        "url": "https://tandartsenpraktijkpostema.nl/over-ons/vacatures/",
+        "selector": "div.site-main",
+        "get_full_html": False
+    },
+    {
+        "name": "Albers & Borgeld Tandartsen",
+        "url": "https://www.albersenborgeldtandartsen.nl/vacatures/",
+        "selector": "article#post-772",
+        "get_full_html": False
+    },
+    {
+        "name": "Breuklander Mondzorg",
+        "url": "https://www.breuklander.nl/vacatures/",
+        "selector": "div.content",
+        "get_full_html": False
+    },
+    {
+        "name": "Mondzorg Rhienderen",
+        "url": "https://www.mondzorgrhienderen.nl/vacatures/",
+        "selector": "section.elementor-element-3c12f82",
+        "get_full_html": False
+    },
+    {
+        "name": "De Nieuwe Mondzorg",
+        "url": "https://denieuwemondzorg.nl/vacature/",
+        "selector": "div.elementor.elementor-162",
+        "get_full_html": False
+    },
+    {
+        "name": "Dental365",
+        "url": "https://dental365.nl/vacatures/",
+        "selector": "article#post-9236",
+        "get_full_html": False
+    },
+    {
+        "name": "",
+        "url": "",
+        "selector": "",
+        "get_full_html": False
+    },
+    {
+        "name": "",
+        "url": "",
+        "selector": "",
+        "get_full_html": False
+    },
+    {
+        "name": "",
+        "url": "",
+        "selector": "",
         "get_full_html": False
     }
 ]

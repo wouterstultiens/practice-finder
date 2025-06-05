@@ -99,7 +99,7 @@ A lightweight Python scraper that tracks configured vacancy (job listing) pages,
      --source=. \
      --trigger-http \
      --timeout=180s \
-     --set-env-vars "BOT_TOKEN=${BOT_TOKEN},CHAT_IDS=${CHAT_IDS},STATE_BUCKET=${STATE_BUCKET},OPENAI_API_KEY=${OPENAI_API_KEY}"
+     --env-vars-file=env.yaml
    ```
 
 4. **Update Cloud Scheduler Job (if URL changed)**
