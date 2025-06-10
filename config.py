@@ -9,6 +9,7 @@ CSV_PATH = Path("data/content.csv")
 # TODO: ADD Indeed, ...
 # TODO: ADD https://www.mondhoek.nl/vacatures/ (javascript thingy)
 # TODO: ADD alle grote plaatsen nog een keer langsgaan, die hebben >10 praktijken waarschijnlijk (Apeldoorn vooral)
+# TODO: ADD (onderdeel van hierboven) tandarts.nl gehad: Apeldoorn Zwolle Zutphen Raalte
 # TODO: ADD https://gaevdental.recruitee.com/
 # TODO: ADD https://vacatures.tandartspraktijk.nl/
 # TODO: ADD https://delievetandarts.nl/
