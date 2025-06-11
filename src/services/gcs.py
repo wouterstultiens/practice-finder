@@ -31,6 +31,7 @@ def _get_bucket() -> storage.Bucket:
 
 def _slugify(text: str) -> str:
     """Normalizes string, converts to lowercase, removes non-alpha characters, and converts spaces to hyphens."""
+    text = text.lower() 
     normalized_text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
     return re.sub(r"[^a-z0-9]+", "-", normalized_text).strip("-")
 
