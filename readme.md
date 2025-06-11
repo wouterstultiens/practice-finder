@@ -1,212 +1,249 @@
 # Vacancy Monitor
 
-A lightweight Python scraper that tracks configured vacancy (job listing) pages, detects changes, and sends Telegram notifications. Designed to run as a Google Cloud Function (Gen 2) on an hourly schedule, with a local CLI mode for development.
+A lightweight, asynchronous Python scraper that tracks configured job listing pages for changes, summarizes them with an LLM, and sends notifications via Telegram.
+
+This project is designed to run locally for development and be deployed as a serverless Google Cloud Function, triggered hourly by Cloud Scheduler.
+
+## Features
+
+- **Asynchronous Scraping**: Fetches dozens of websites concurrently using `aiohttp`.
+- **Configurable Targets**: Easily add or modify target websites, CSS selectors, and content type (HTML vs. Text) in `config.py`.
+- **Content Filtering**: A new `ignore_selectors` option allows you to remove unwanted parts (like ads or timestamps) from the scraped content before comparison.
+- **Change Detection**: Compares the latest scrape against the last known version stored in Google Cloud Storage.
+- **AI-Powered Summaries**: When a change is detected, OpenAI's GPT-4 generates a concise summary of what's new.
+- **Telegram Notifications**: Sends alerts for new sites, updated vacancies, and fetch errors to one or more Telegram chats.
+- **Robust Debugging**: Includes tools to test CSS selectors and LLM prompts locally before deploying.
+- **Cloud-Native**: Designed for easy deployment on Google Cloud Functions (Gen 2).
 
 ---
 
 ## Prerequisites
 
-* Python 3.11+ (3.12 tested)
-* Google Cloud SDK (`gcloud`)
-* Telegram Bot Token & Chat ID(s)
-* A Google Cloud Storage bucket for state & snapshots
+- Python 3.11+
+- A Google Cloud Platform project with:
+  - Google Cloud SDK (`gcloud`) installed and authenticated.
+  - A Google Cloud Storage (GCS) bucket.
+- An OpenAI API Key.
+- A Telegram Bot Token and the desired Chat ID(s).
 
 ---
 
-## Quick Start
+## 1. Local Setup
 
-1. **Clone & Install**
+**1.1. Clone and Install Dependencies**
 
-   ```bash
-   git clone https://github.com/your-org/vacancy-monitor.git
-   cd vacancy-monitor
-   python3 -m venv .venv   # optional
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-2. **Set Environment Variables**
-
-   Create a `.env` file or export on your shell:
-
-   ```bash
-   export BOT_TOKEN=<your-telegram-bot-token>
-   export CHAT_IDS=<comma-separated-chat-ids>
-   export STATE_BUCKET=<your-gcs-bucket-name>
-   export OPENAI_API_KEY=<your-openai-api-key>
-   ```
-
-3. **Local Testing (CLI Mode)**
-
-   * Run without notifications (prints to stdout):
-
-     ```bash
-     python main.py
-     ```
-
-   * Run and send to Telegram (requires `BOT_TOKEN` & `CHAT_IDS`):
-
-     ```bash
-     python main.py --notify
-     ```
-
----
-
-## Configuration
-
-* **Vacancy Definitions**:  
-  Edit `config.py` → `PRACTICES` list. Each item has:
-
-  ```python
-  {
-      "name":        "Friendly Clinic",
-      "url":         "https://example.com/vacatures",
-      "selector":    "div.vacancy-list",
-      "get_full_html": False
-  }
-  ```
-
-* **State & Snapshots**:
-
-  * `state.json` (in GCS): last-seen HTML per URL.
-  * `snapshots/YYYYMMDD_HHMMSS.json`: full state archive.
-  * `snapshots/failed/YYYYMMDD_HHMMSS.json`: failed URLs.
-
----
-
-## Deployment
-
-1. **Reload `.env` (if needed)**
-
-   ```bash
-   export $(awk -F': ' '/^[^#].*:/{gsub(/"/, "", $2); printf "%s=%s ", $1, $2}' env.yaml)
-   ```
-
-2. **(Re)Install Dependencies**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Deploy Cloud Function**
-
-   ```bash
-   gcloud functions deploy vacancy-monitor \
-     --gen2 \
-     --runtime python312 \
-     --region europe-west4 \
-     --entry-point main \
-     --source=. \
-     --trigger-http \
-     --timeout=180s \
-     --env-vars-file=env.yaml
-   ```
-
-4. **Update Cloud Scheduler Job (if URL changed)**
-
-   ```bash
-   FUNCTION_URL=$(gcloud functions describe vacancy-monitor \
-     --region=europe-west4 \
-     --format='value(serviceConfig.uri)')
-
-   gcloud scheduler jobs update http vacancy-monitor-hourly \
-     --location=europe-west1 \
-     --schedule "0 * * * *" \
-     --uri "${FUNCTION_URL}" \
-     --http-method=GET \
-     --time-zone "Europe/Amsterdam"
-   ```
-
-5. **Manual Invocation (Verify)**
-
-   ```bash
-   gcloud functions call vacancy-monitor --region=europe-west4
-   ```
-
-6. **Tail Logs**
-
-   ```bash
-   gcloud functions logs read vacancy-monitor --region=europe-west4 --limit=20
-
-   gcloud logging read \
-     'resource.type="cloud_run_revision" AND \
-      resource.labels.service_name="vacancy-monitor"' \
-     --project=<YOUR_PROJECT_ID> \
-     --limit=20 \
-     --format="table(timestamp, severity, textPayload)"
-   ```
-
----
-
-## Repository Structure
-
+```bash
+git clone <your-repository-url>
+cd vacancy-monitor
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
-├── .gcloudignore
-├── .gitignore
-├── config.py
-├── debug.py
-├── fetch.py
-├── main.py
-├── monitor.py
-├── notifier.py
-├── readme.md
-├── requirements.txt
-├── state.py
-├── storage.py
-└── data/             (local cache for CSV snapshots, ignored by Git)
+
+**1.2. Configure Environment Variables**
+
+Create a file named `.env` in the project root and add your secrets. The application will load this file automatically during local development.
+
+```ini
+# .env
+# Google Cloud
+STATE_BUCKET="your-gcs-bucket-name"
+GCP_PROJECT_ID="your-gcp-project-id" # Optional, but good practice
+
+# Services
+OPENAI_API_KEY="sk-..."
+TELEGRAM_BOT_TOKEN="12345:ABC..."
+TELEGRAM_CHAT_IDS="chat_id_1,chat_id_2" # Comma-separated
 ```
 
 ---
 
-## Usage
+## 2. Configuration
 
-1. **Monitoring Flow**
+All target websites are defined in the `PRACTICES` list in `config.py`.
 
-   * `monitor.run_once()` fetches all URLs (concurrently), diffs against `state.json` in GCS, archives a new snapshot, logs failures, updates `state.json`, and returns a list of human-readable messages.
-   * `notifier.send(messages)` either prints (CLI mode) or sends to Telegram.
-   * In Cloud Function mode, `main(request)` calls `run_once()` on each HTTP trigger (hourly via Scheduler).
+Each entry is a dictionary with the following keys:
 
-2. **Debugging a Single Vacancy Fetch**
+- `name` (str): The human-readable name of the practice.
+- `url` (str): The full URL of the vacancy page.
+- `selector` (str): The CSS selector for the main content area to monitor.
+- `get_html` (bool):
+  - `True`: Monitor the raw HTML of the selected element.
+  - `False`: Monitor only the extracted text content.
+- `ignore_selectors` (list[str], optional): A list of CSS selectors within the main `selector` to remove before processing. This is perfect for ignoring dynamic content like "Last updated" timestamps, cookie banners, or ads.
 
-   ```bash
-   python debug.py <index>
-   ```
+**Example Entry in `config.py`:**
 
-   Where `<index>` is the zero-based index of a practice in `config.py`.
-   Prints the extracted content for troubleshooting your CSS selector.
-
-3. **Automatic Encoding Detection**
-
-   Pages served in encodings like ISO-8859-1 or Windows-1252 are handled seamlessly:
-
-   * It first attempts to decode the response body as UTF-8.
-   * If that fails, it feeds the raw bytes into BeautifulSoup, which auto-detects the correct charset via `<meta charset>` or other heuristics.
-   * This means you no longer need to worry about `'utf-8' codec can't decode byte …` errors when hitting pages in Latin-1, etc.
-
-   Just make sure you're using the latest version of `fetch.py`.
-
----
-
-## Development
-
-* Add or update entries in `config.py` → `PRACTICES` to watch new vacancy pages.
-* Use `python main.py` locally to verify before deploying.
-* If you modify `requirements.txt`, re-run `pip install -r requirements.txt` before deployment.
-* Logging uses `logging.INFO` by default—check Cloud Function logs for details.
+```python
+{
+    "name": "De Deventer Tandartspraktijk",
+    "url": "https://www.dedeventertandartspraktijk.nl/vacatures",
+    "selector": "article#post-131",
+    "get_html": False,
+    "ignore_selectors": ["div.cookie-notice", "span.timestamp"] # Optional
+}
+```
 
 ---
 
-## Dependencies
+## 3. Usage and Debugging
 
-* `aiohttp` – asynchronous HTTP requests  
-* `beautifulsoup4` – HTML parsing & CSS selectors  
-* `requests` – synchronous HTTP for CLI/debug  
-* `python-telegram-bot` – Telegram notifications  
-* `google-cloud-storage` – state & snapshot persistence in GCS  
-* `functions-framework` – Cloud Function entry point
+When running scripts located within the `src/` directory (like the debug tools), you must run them as Python modules from the project root directory using `python -m`.
+
+### 3.1. Running a Full Scan Locally
+
+You can simulate a full monitoring cycle from your command line.
+
+**Dry Run (prints notifications to console):**
+```bash
+# Run from the project root
+python main.py
+```
+
+**Live Run (sends notifications to Telegram):**
+```bash
+# Run from the project root
+python main.py --notify
+```
+
+### 3.2. Debugging a CSS Selector
+
+Before adding a new practice to `config.py`, you need to find the correct CSS selector. This tool helps you test it.
+
+```bash
+# Run from the project root directory:
+# The index corresponds to the practice's position in the PRACTICES list in config.py
+python -m src.tools.debug_selector <index>
+```
+The script will fetch the page, show you the full HTML (for inspection if `--html` is used), and print the exact content it extracted using your selector. This lets you quickly verify and refine your selectors.
+
+- If the specified `selector` is not found on the page, the script will output a specific error message.
+- If the extracted content is empty, a warning will be shown, suggesting you double-check your selector or `ignore_selectors`.
+
+Add `--html` flag to also print the full page HTML before extraction:
+```bash
+# Run from the project root directory:
+python -m src.tools.debug_selector <index> --html
+```
+
+
+### 3.3. Debugging the LLM Prompt
+
+If you want to improve the quality of the AI-generated summaries, you can test the prompt against real-world changes stored in GCS.
+
+```bash
+# Run from the project root directory:
+# Fetches a random change from GCS and shows the summary
+python -m src.tools.debug_prompt
+
+# Fetches a change from a specific run timestamp (e.g., 20231027_153000)
+python -m src.tools.debug_prompt --ts 20231027_153000
+```
+This script will download a random or specified change pair (old vs. new content) from your GCS bucket, pass it to the LLM, and print the old content, new content, and the resulting summary. This allows you to tweak the prompt in `src/services/llm.py` and immediately see the result.
 
 ---
 
-## License
+## 4. Deployment to Google Cloud
+
+**4.1. Create an `env.yaml` for Deployment**
+
+GCP Functions read environment variables from a YAML file. Create `env.yaml` in the project root with the same keys as your `.env` file.
+
+```yaml
+# env.yaml
+STATE_BUCKET: "your-gcs-bucket-name"
+OPENAI_API_KEY: "sk-..."
+TELEGRAM_BOT_TOKEN: "12345:ABC..."
+TELEGRAM_CHAT_IDS: "chat_id_1,chat_id_2"
+```
+*Note: Do NOT commit `env.yaml` to Git as it contains secrets.*
+
+**4.2. Deploy the Cloud Function**
+
+Run the following `gcloud` command from the project root:
+
+```bash
+gcloud functions deploy vacancy-monitor \
+  --gen2 \
+  --runtime=python312 \
+  --region=europe-west1 \
+  --source=. \
+  --entry-point=main_http \
+  --trigger-http \
+  --allow-unauthenticated \
+  --timeout=300s \
+  --env-vars-file=env.yaml
+```
+**Note:** `--allow-unauthenticated` is typically required for Cloud Scheduler to invoke the function via an HTTP trigger. Ensure your function trigger URL is protected appropriately if needed for production.
+
+**4.3. Set up Cloud Scheduler**
+
+Create a scheduler job to trigger the function every hour.
+
+1. Go to the Cloud Scheduler page in the Google Cloud Console.
+2. Click "Create Job".
+3. **Frequency**: `0 * * * *` (for every hour at minute 0).
+4. **Timezone**: Your preferred timezone (e.g., `Europe/Amsterdam`).
+5. **Target type**: `HTTP`.
+6. **URL**: The trigger URL of the function you just deployed (you can find this on the Cloud Functions page under the "Trigger" tab).
+7. **HTTP Method**: `GET`.
+8. Click "Create".
+
+Your vacancy monitor is now live!
+
+**4.4. Verify Deployment and Logs**
+
+You can manually test the deployed function and check logs:
+
+```bash
+# Manually trigger the function
+gcloud functions call vacancy-monitor --region=europe-west1
+
+# Tail function logs
+gcloud functions logs read vacancy-monitor --region=europe-west1 --limit=50
+```
+
+
+---
+
+## 5. Repository Structure
+
+```
+.
+├── .gcloudignore        # Files/dirs to exclude from deployment
+├── .gitignore           # Files/dirs to exclude from Git
+├── config.py            # Practice definitions (names, URLs, selectors)
+├── main.py              # Cloud Function entry point & local CLI runner
+├── readme.md            # This file
+├── requirements.txt     # Python dependencies
+└── src/                 # Main source code package
+    ├── core/            # Core logic (monitoring, scraping)
+    │   ├── monitor.py   # Orchestrates fetching, diffing, saving
+    │   └── scraper.py   # Handles async HTTP fetching and content extraction/filtering
+    ├── services/        # External integrations (GCS, LLM, Telegram)
+    │   ├── gcs.py       # Google Cloud Storage operations
+    │   ├── llm.py       # OpenAI LLM integration
+    │   └── telegram.py  # Telegram notification sending
+    └── tools/           # Local development/debugging tools
+        ├── debug_prompt.py   # Debug LLM prompt with real data
+        └── debug_selector.py # Debug CSS selectors for a single URL
+```
+*(Note: `__init__.py` files exist within directories but are not listed explicitly here for brevity).*
+
+---
+
+## 6. Dependencies
+
+- `aiohttp`: Asynchronous HTTP client for efficient parallel fetching.
+- `beautifulsoup4`: Robust HTML parsing and CSS selector engine.
+- `openai`: Official Python library for interacting with the OpenAI API.
+- `python-dotenv`: Loads environment variables from a `.env` file locally.
+- `google-cloud-storage`: Client library for interacting with GCS.
+- `functions-framework`: Library for writing serverless functions that run on Google Cloud.
+- `python-telegram-bot`: Library for interacting with the Telegram Bot API.
+
+---
+
+## 7. License
 
 This project is released under the MIT License.

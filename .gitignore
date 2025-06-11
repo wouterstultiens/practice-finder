@@ -1,9 +1,9 @@
 .idea/
 .venv/
-*.log
-data/
-practice-finder.iml
 __pycache__/
-*.xml
-env.yaml   
+*.log
 *.csv
+practice-finder.iml
+env.yaml
+data/
+*.xml
