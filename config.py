@@ -204,7 +204,8 @@ PRACTICES = [
         "name": "Tandartsenpraktijk Epe",
         "url": "https://www.tandartsenpraktijkepe.nl/vacatures/",
         "selector": "body",
-        "get_html": False
+        "get_html": False,
+        "ignore_selectors": ["header#header", "footer#footer", "aside[aria-label='Toegankelijkheid']", "div.cookiee-consent-container", "div#sidebar-wrapper"]
     },
     {
         "name": "Dental Clinics Apeldoorn",
@@ -457,7 +458,8 @@ PRACTICES = [
         "name": "MP3 Tandartsen",
         "url": "https://mp3tandartsen.nl/tandarts-apeldoorn-en-kliniek-uit-apeldoorn/vacatures/",
         "selector": "article#post-274",
-        "get_html": False
+        "get_html": False,
+        "ignore_selectors": ["div.page-brands", "div.zorgkaart"]
     },
     {
         "name": "Tandzorg Twello",
